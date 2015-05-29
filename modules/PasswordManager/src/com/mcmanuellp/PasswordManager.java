@@ -77,7 +77,8 @@ public class PasswordManager
 				FileUtils.createMissingTextFiles(save, temp, s, p);
 				if(!FileUtils.getMissingFiles(s).isEmpty()) FileUtils.writeToFile(s, AESUtils.tempSalt);
 				if(!FileUtils.getMissingFiles(p).isEmpty()) FileUtils.writeToFile(p, AESUtils.tempIv);
-			} catch(IOException e)
+			}
+			catch(IOException e)
 			{
 				ExceptionUtils.handle(e, true, true);
 			}
@@ -122,7 +123,7 @@ public class PasswordManager
 
 	public static class crypto
 	{
-		public String key;
+		public String  key;
 		public boolean auto;
 
 		crypto()
@@ -147,13 +148,15 @@ public class PasswordManager
 			{
 				auto = false;
 				AESUtils.decrypt(key, file.save, file.temp, file.s, file.p);
-			} catch(InvalidKeyException | InvalidKeySpecException | BadPaddingException e)
+			}
+			catch(InvalidKeyException | InvalidKeySpecException | BadPaddingException e)
 			{
 				if(e instanceof InvalidKeyException && e.getMessage().contains("Illegal key size"))
 					System.out.println("This error is probably caused due to the lack of the necessary Java Cryptography Extension policy files, if you don't already have these files installed, \nyou can download them for JRE 8 here: http://www.oracle.com/technetwork/java/javase/downloads/jce8-download-2133166.html \nif needed they are also available for other versions here: http://www.oracle.com/technetwork/java/javase/downloads/index.html \ninstall instructions are shipped with the files. \nAlternatively you can run this with '-jcefix' as argument but we do not take responsibility for any legal issues that may cause.");
 				ExceptionUtils.handle(e, true, false);
 				inputKey();
-			} catch(NoSuchPaddingException | NoSuchAlgorithmException | InvalidAlgorithmParameterException | IllegalBlockSizeException | IOException e)
+			}
+			catch(NoSuchPaddingException | NoSuchAlgorithmException | InvalidAlgorithmParameterException | IllegalBlockSizeException | IOException e)
 			{
 				ExceptionUtils.handle(e, true, true);
 			}
@@ -164,7 +167,8 @@ public class PasswordManager
 			try
 			{
 				AESUtils.encrypt(key, file.temp, file.save, file.s, file.p);
-			} catch(Exception e)
+			}
+			catch(Exception e)
 			{
 				ExceptionUtils.handle(e, true, true);
 			}
@@ -174,8 +178,8 @@ public class PasswordManager
 	public static class login
 	{
 		public ArrayList<LoginInfo> logins;
-		public int length;
-		public int current;
+		public int                  length;
+		public int                  current;
 
 		login()
 		{
@@ -219,7 +223,8 @@ public class PasswordManager
 				}
 
 				logins = loginInfos;
-			} catch(IOException e)
+			}
+			catch(IOException e)
 			{
 				ExceptionUtils.handle(e, true, true);
 			}
@@ -239,7 +244,8 @@ public class PasswordManager
 				}
 
 				w.close();
-			} catch(IOException e)
+			}
+			catch(IOException e)
 			{
 				ExceptionUtils.handle(e, true, true, "Problem writing to the file " + file.getName());
 			}
@@ -258,7 +264,9 @@ public class PasswordManager
 
 		public void setCurrentIndex(int index)
 		{
-			if(indexAvailable(index)) { current = index; } else if(logins.isEmpty()) { current = 0; } else
+			if(indexAvailable(index)) { current = index; }
+			else if(logins.isEmpty()) { current = 0; }
+			else
 			{
 				System.out.println("ERR: index out of bounds (loginListCurrentIndex)\nACTION: setCurrentIndex(int:)");
 			}
@@ -271,7 +279,8 @@ public class PasswordManager
 			updateIndexLength();
 			index = (dir > 0) ? current + 1 : ((dir < 0) ? current - 1 : current);
 			fallback = (dir > 0) ? 0 : ((dir < 0) ? length - 1 : current);
-			if(indexAvailable(index)) { setCurrentIndex(index); } else { setCurrentIndex(fallback); }
+			if(indexAvailable(index)) { setCurrentIndex(index); }
+			else { setCurrentIndex(fallback); }
 		}
 
 		public void removeCurrentLoginInfo()
@@ -302,16 +311,18 @@ public class PasswordManager
 			if(!logins.isEmpty())
 			{
 				return logins.get(current);
-			} else
+			}
+			else
 			{
 				return LoginInfo.getEmpty();
 			}
 		}
 	}
 
-	public static final String version = "1.8a";//TODO update this & changelog before every built artifact
 	public static class changelog extends Changelog
 	{
+		public final String version = "1.8a";//TODO update this & changelog before every built artifact
+
 		changelog()
 		{
 			super();
@@ -354,10 +365,10 @@ public class PasswordManager
 		}
 	}
 
-	public static file file = new file();
-	public static args args = new args();
-	public static crypto crypto = new crypto();
-	public static login login = new login();
+	public static file      file      = new file();
+	public static args      args      = new args();
+	public static crypto    crypto    = new crypto();
+	public static login     login     = new login();
 	public static changelog changelog = new changelog();
 
 	public static boolean stub;
